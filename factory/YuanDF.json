@@ -1,0 +1,9 @@
+{
+	"name": "YuanDF",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "0cb3e104-b2db-4b54-991b-890e8fad6fd3",
+		"tenantId": "eb095636-1052-4895-952b-1ff9df1d1121"
+	}
+}
