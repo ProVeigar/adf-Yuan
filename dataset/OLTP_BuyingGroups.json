@@ -1,0 +1,41 @@
+{
+	"name": "OLTP_BuyingGroups",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "WWIstandard",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "BuyingGroupID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "BuyingGroupName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LastEditedBy",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ValidFrom",
+				"type": "datetime2",
+				"scale": 7
+			},
+			{
+				"name": "ValidTo",
+				"type": "datetime2",
+				"scale": 7
+			}
+		],
+		"typeProperties": {
+			"schema": "Sales",
+			"table": "BuyingGroups"
+		}
+	}
+}

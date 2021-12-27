@@ -1,0 +1,41 @@
+{
+	"name": "OLTP_CustomerCategories",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "WWIstandard",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "CustomerCategoryID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "CustomerCategoryName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LastEditedBy",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ValidFrom",
+				"type": "datetime2",
+				"scale": 7
+			},
+			{
+				"name": "ValidTo",
+				"type": "datetime2",
+				"scale": 7
+			}
+		],
+		"typeProperties": {
+			"schema": "Sales",
+			"table": "CustomerCategories"
+		}
+	}
+}
