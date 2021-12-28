@@ -2,7 +2,7 @@
 	"name": "OLTP_People",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "WWIstandard",
+			"referenceName": "WWIOLTP",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],

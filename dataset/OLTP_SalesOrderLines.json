@@ -1,10 +1,6 @@
 {
 	"name": "OLTP_SalesOrderLines",
 	"properties": {
-		"linkedServiceName": {
-			"referenceName": "WWIstandard",
-			"type": "LinkedServiceReference"
-		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [
