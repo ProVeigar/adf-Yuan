@@ -1,0 +1,60 @@
+{
+	"name": "OLTP_ODS",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "OLTP_People",
+						"type": "DatasetReference"
+					},
+					"name": "OLTP"
+				},
+				{
+					"dataset": {
+						"referenceName": "ODS_People",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ODS_People",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"name": "sink2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "DerivedColumn1"
+				},
+				{
+					"name": "Exists1"
+				},
+				{
+					"name": "DerivedColumn2"
+				},
+				{
+					"name": "DerivedColumn3"
+				},
+				{
+					"name": "Exists2"
+				},
+				{
+					"name": "DerivedColumn4"
+				},
+				{
+					"name": "AlterRow1"
+				}
+			],
+			"script": "source(output(\n\t\tPersonID as integer,\n\t\tFullName as string,\n\t\tPreferredName as string,\n\t\tSearchName as string,\n\t\tIsPermittedToLogon as boolean,\n\t\tLogonName as string,\n\t\tIsExternalLogonProvider as boolean,\n\t\tHashedPassword as binary,\n\t\tIsSystemUser as boolean,\n\t\tIsEmployee as boolean,\n\t\tIsSalesperson as boolean,\n\t\tUserPreferences as string,\n\t\tPhoneNumber as string,\n\t\tFaxNumber as string,\n\t\tEmailAddress as string,\n\t\tPhoto as binary,\n\t\tCustomFields as string,\n\t\tOtherLanguages as string,\n\t\tLastEditedBy as integer,\n\t\tValidFrom as timestamp,\n\t\tValidTo as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tlimit: 100,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> OLTP\nsource(output(\n\t\tPersonID as integer,\n\t\tFullName as string,\n\t\tPreferredName as string,\n\t\tSearchName as string,\n\t\tIsPermittedToLogon as boolean,\n\t\tLogonName as string,\n\t\tIsExternalLogonProvider as boolean,\n\t\tHashedPassword as binary,\n\t\tIsSystemUser as boolean,\n\t\tIsEmployee as boolean,\n\t\tIsSalesperson as boolean,\n\t\tUserPreferences as string,\n\t\tPhoneNumber as string,\n\t\tFaxNumber as string,\n\t\tEmailAddress as string,\n\t\tPhoto as binary,\n\t\tCustomFields as string,\n\t\tOtherLanguages as string,\n\t\tLastEditedBy as integer,\n\t\tValidFrom as timestamp,\n\t\tValidTo as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> source2\nOLTP derive(PersonID = PersonID) ~> DerivedColumn1\nDerivedColumn1, source2 exists(DerivedColumn1@PersonID == source2@PersonID,\n\tnegate:true,\n\tbroadcast: 'auto')~> Exists1\nExists1 derive() ~> DerivedColumn2\nsource2 derive() ~> DerivedColumn3\nDerivedColumn3 exists(ERROR_FUNCTION('') == ERROR_FUNCTION(''),\n\tnegate:false,\n\tbroadcast: 'auto')~> Exists2\nExists2 derive() ~> DerivedColumn4\nDerivedColumn4 alterRow() ~> AlterRow1\nExists1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tPersonID as integer,\n\t\tFullName as string,\n\t\tPreferredName as string,\n\t\tSearchName as string,\n\t\tIsPermittedToLogon as boolean,\n\t\tLogonName as string,\n\t\tIsExternalLogonProvider as boolean,\n\t\tHashedPassword as binary,\n\t\tIsSystemUser as boolean,\n\t\tIsEmployee as boolean,\n\t\tIsSalesperson as boolean,\n\t\tUserPreferences as string,\n\t\tPhoneNumber as string,\n\t\tFaxNumber as string,\n\t\tEmailAddress as string,\n\t\tPhoto as binary,\n\t\tCustomFields as string,\n\t\tOtherLanguages as string,\n\t\tLastEditedBy as integer,\n\t\tValidFrom as timestamp,\n\t\tValidTo as timestamp\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1\nAlterRow1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink2"
+		}
+	}
+}
