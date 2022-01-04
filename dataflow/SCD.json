@@ -1,0 +1,64 @@
+{
+	"name": "SCD",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "OLTP_People",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ODS_People",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ODS_People",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ODS_People",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "addingActive"
+				},
+				{
+					"name": "Select1"
+				},
+				{
+					"name": "Lookup1"
+				},
+				{
+					"name": "existing"
+				},
+				{
+					"name": "Select2"
+				},
+				{
+					"name": "DerivedColumn1"
+				},
+				{
+					"name": "AlterRow1"
+				}
+			],
+			"script": "source(output(\n\t\tPersonID as integer,\n\t\tFullName as string,\n\t\tPreferredName as string,\n\t\tSearchName as string,\n\t\tIsPermittedToLogon as boolean,\n\t\tLogonName as string,\n\t\tIsExternalLogonProvider as boolean,\n\t\tHashedPassword as binary,\n\t\tIsSystemUser as boolean,\n\t\tIsEmployee as boolean,\n\t\tIsSalesperson as boolean,\n\t\tUserPreferences as string,\n\t\tPhoneNumber as string,\n\t\tFaxNumber as string,\n\t\tEmailAddress as string,\n\t\tPhoto as binary,\n\t\tCustomFields as string,\n\t\tOtherLanguages as string,\n\t\tLastEditedBy as integer,\n\t\tValidFrom as timestamp,\n\t\tValidTo as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> source1\nsource(output(\n\t\tPersonID as integer,\n\t\tFullName as string,\n\t\tPreferredName as string,\n\t\tSearchName as string,\n\t\tIsPermittedToLogon as boolean,\n\t\tLogonName as string,\n\t\tIsExternalLogonProvider as boolean,\n\t\tHashedPassword as binary,\n\t\tIsSystemUser as boolean,\n\t\tIsEmployee as boolean,\n\t\tIsSalesperson as boolean,\n\t\tUserPreferences as string,\n\t\tPhoneNumber as string,\n\t\tFaxNumber as string,\n\t\tEmailAddress as string,\n\t\tPhoto as binary,\n\t\tCustomFields as string,\n\t\tOtherLanguages as string,\n\t\tLastEditedBy as integer,\n\t\tValidFrom as timestamp,\n\t\tValidTo as timestamp\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~> source2\nsource1 derive(isActive = 1) ~> addingActive\nsource2 select(mapColumn(\n\t\tSQL_PersonID = PersonID,\n\t\tFullName,\n\t\tPreferredName,\n\t\tSearchName,\n\t\tIsPermittedToLogon,\n\t\tLogonName,\n\t\tIsExternalLogonProvider,\n\t\tHashedPassword,\n\t\tIsSystemUser,\n\t\tIsEmployee,\n\t\tIsSalesperson,\n\t\tUserPreferences,\n\t\tPhoneNumber,\n\t\tFaxNumber,\n\t\tEmailAddress,\n\t\tPhoto,\n\t\tCustomFields,\n\t\tOtherLanguages,\n\t\tLastEditedBy,\n\t\tValidFrom,\n\t\tValidTo\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select1\nsource1, Select1 lookup(PersonID == SQL_PersonID,\n\tmultiple: true,\n\tbroadcast: 'auto')~> Lookup1\nLookup1 filter(!isNull(SQL_PersonID)) ~> existing\nexisting select(mapColumn(\n\t\tPersonID,\n\t\tFullName = source1@FullName,\n\t\tPreferredName = source1@PreferredName,\n\t\tSearchName = source1@SearchName,\n\t\tIsPermittedToLogon = source1@IsPermittedToLogon,\n\t\tLogonName = source1@LogonName,\n\t\tIsExternalLogonProvider = source1@IsExternalLogonProvider,\n\t\tHashedPassword = source1@HashedPassword,\n\t\tIsSystemUser = source1@IsSystemUser,\n\t\tIsEmployee = source1@IsEmployee,\n\t\tIsSalesperson = source1@IsSalesperson,\n\t\tUserPreferences = source1@UserPreferences,\n\t\tPhoneNumber = source1@PhoneNumber,\n\t\tFaxNumber = source1@FaxNumber,\n\t\tEmailAddress = source1@EmailAddress,\n\t\tPhoto = source1@Photo,\n\t\tCustomFields = source1@CustomFields,\n\t\tOtherLanguages = source1@OtherLanguages,\n\t\tLastEditedBy = source1@LastEditedBy,\n\t\tValidFrom = source1@ValidFrom,\n\t\tValidTo = source1@ValidTo,\n\t\tSQL_PersonID,\n\t\tFullName = Select1@FullName,\n\t\tPreferredName = Select1@PreferredName,\n\t\tSearchName = Select1@SearchName,\n\t\tIsPermittedToLogon = Select1@IsPermittedToLogon,\n\t\tLogonName = Select1@LogonName,\n\t\tIsExternalLogonProvider = Select1@IsExternalLogonProvider,\n\t\tHashedPassword = Select1@HashedPassword,\n\t\tIsSystemUser = Select1@IsSystemUser,\n\t\tIsEmployee = Select1@IsEmployee,\n\t\tIsSalesperson = Select1@IsSalesperson,\n\t\tUserPreferences = Select1@UserPreferences,\n\t\tPhoneNumber = Select1@PhoneNumber,\n\t\tFaxNumber = Select1@FaxNumber,\n\t\tEmailAddress = Select1@EmailAddress,\n\t\tPhoto = Select1@Photo,\n\t\tCustomFields = Select1@CustomFields,\n\t\tOtherLanguages = Select1@OtherLanguages,\n\t\tLastEditedBy = Select1@LastEditedBy,\n\t\tValidFrom = Select1@ValidFrom,\n\t\tValidTo = Select1@ValidTo\n\t),\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> Select2\nSelect2 derive(FullName = 1==1) ~> DerivedColumn1\nDerivedColumn1 alterRow(updateIf(1==1)) ~> AlterRow1\naddingActive sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tPersonID as integer,\n\t\tFullName as string,\n\t\tPreferredName as string,\n\t\tSearchName as string,\n\t\tIsPermittedToLogon as boolean,\n\t\tLogonName as string,\n\t\tIsExternalLogonProvider as boolean,\n\t\tHashedPassword as binary,\n\t\tIsSystemUser as boolean,\n\t\tIsEmployee as boolean,\n\t\tIsSalesperson as boolean,\n\t\tUserPreferences as string,\n\t\tPhoneNumber as string,\n\t\tFaxNumber as string,\n\t\tEmailAddress as string,\n\t\tPhoto as binary,\n\t\tCustomFields as string,\n\t\tOtherLanguages as string,\n\t\tLastEditedBy as integer,\n\t\tValidFrom as timestamp,\n\t\tValidTo as timestamp\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> sink1\nAlterRow1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tinput(\n\t\tPersonID as integer,\n\t\tFullName as string,\n\t\tPreferredName as string,\n\t\tSearchName as string,\n\t\tIsPermittedToLogon as boolean,\n\t\tLogonName as string,\n\t\tIsExternalLogonProvider as boolean,\n\t\tHashedPassword as binary,\n\t\tIsSystemUser as boolean,\n\t\tIsEmployee as boolean,\n\t\tIsSalesperson as boolean,\n\t\tUserPreferences as string,\n\t\tPhoneNumber as string,\n\t\tFaxNumber as string,\n\t\tEmailAddress as string,\n\t\tPhoto as binary,\n\t\tCustomFields as string,\n\t\tOtherLanguages as string,\n\t\tLastEditedBy as integer,\n\t\tValidFrom as timestamp,\n\t\tValidTo as timestamp\n\t),\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError',\n\tmapColumn(\n\t\tPersonID,\n\t\tFullName,\n\t\tPreferredName,\n\t\tSearchName,\n\t\tIsPermittedToLogon,\n\t\tLogonName,\n\t\tIsExternalLogonProvider,\n\t\tIsSystemUser,\n\t\tIsEmployee,\n\t\tIsSalesperson,\n\t\tUserPreferences,\n\t\tPhoneNumber,\n\t\tFaxNumber,\n\t\tEmailAddress,\n\t\tCustomFields,\n\t\tOtherLanguages,\n\t\tLastEditedBy,\n\t\tValidFrom,\n\t\tValidTo\n\t)) ~> sink2"
+		}
+	}
+}
