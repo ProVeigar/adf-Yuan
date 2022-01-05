@@ -3,11 +3,11 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "SCD",
-				"type": "ExecuteDataFlow",
+				"name": "CopyPeople",
+				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
-					"timeout": "1.00:00:00",
+					"timeout": "7.00:00:00",
 					"retry": 0,
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
@@ -15,19 +15,55 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"dataflow": {
-						"referenceName": "SCD",
-						"type": "DataFlowReference"
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
 					},
-					"compute": {
-						"coreCount": 8,
-						"computeType": "General"
+					"sink": {
+						"type": "AzureSqlSink"
 					},
-					"traceLevel": "Fine"
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "OLTP_People",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ODSPeople",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Copy data2",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"enableStaging": false
 				}
 			},
 			{
-				"name": "Copy data1",
+				"name": "Copy data3",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
