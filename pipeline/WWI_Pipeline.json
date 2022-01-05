@@ -47,7 +47,7 @@
 				]
 			},
 			{
-				"name": "Copy data2",
+				"name": "CopyOrder",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -59,8 +59,36 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"enableStaging": false
-				}
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzureSqlSink"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "OLTP_SalesOrder",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ODSSalesOrder",
+						"type": "DatasetReference"
+					}
+				]
 			},
 			{
 				"name": "Copy data3",
