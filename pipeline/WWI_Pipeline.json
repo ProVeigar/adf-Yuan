@@ -3,11 +3,11 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy People",
-				"type": "Copy",
+				"name": "SCD",
+				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
-					"timeout": "7.00:00:00",
+					"timeout": "1.00:00:00",
 					"retry": 0,
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
@@ -15,205 +15,16 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"source": {
-						"type": "AzureSqlSource",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
+					"dataflow": {
+						"referenceName": "SCD",
+						"type": "DataFlowReference"
 					},
-					"sink": {
-						"type": "AzureSqlSink",
-						"tableOption": "autoCreate",
-						"disableMetricsCollection": false
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
 					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"mappings": [
-							{
-								"source": {
-									"name": "PersonID",
-									"type": "Int32"
-								},
-								"sink": {
-									"name": "PersonID",
-									"type": "Int32"
-								}
-							},
-							{
-								"source": {
-									"name": "FullName",
-									"type": "String"
-								},
-								"sink": {
-									"name": "FullName",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "PreferredName",
-									"type": "String"
-								},
-								"sink": {
-									"name": "PreferredName",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "IsPermittedToLogon",
-									"type": "Boolean"
-								},
-								"sink": {
-									"name": "IsPermittedToLogon",
-									"type": "Boolean"
-								}
-							},
-							{
-								"source": {
-									"name": "LogonName",
-									"type": "String"
-								},
-								"sink": {
-									"name": "LogonName",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "IsExternalLogonProvider",
-									"type": "Boolean"
-								},
-								"sink": {
-									"name": "IsExternalLogonProvider",
-									"type": "Boolean"
-								}
-							},
-							{
-								"source": {
-									"name": "HashedPassword",
-									"type": "Byte[]"
-								},
-								"sink": {
-									"name": "HashedPassword",
-									"type": "Byte[]"
-								}
-							},
-							{
-								"source": {
-									"name": "IsSystemUser",
-									"type": "Boolean"
-								},
-								"sink": {
-									"name": "IsSystemUser",
-									"type": "Boolean"
-								}
-							},
-							{
-								"source": {
-									"name": "IsEmployee",
-									"type": "Boolean"
-								},
-								"sink": {
-									"name": "IsEmployee",
-									"type": "Boolean"
-								}
-							},
-							{
-								"source": {
-									"name": "IsSalesperson",
-									"type": "Boolean"
-								},
-								"sink": {
-									"name": "IsSalesperson",
-									"type": "Boolean"
-								}
-							},
-							{
-								"source": {
-									"name": "UserPreferences",
-									"type": "String"
-								},
-								"sink": {
-									"name": "UserPreferences",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "PhoneNumber",
-									"type": "String"
-								},
-								"sink": {
-									"name": "PhoneNumber",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "FaxNumber",
-									"type": "String"
-								},
-								"sink": {
-									"name": "FaxNumber",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "EmailAddress",
-									"type": "String"
-								},
-								"sink": {
-									"name": "EmailAddress",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "Photo",
-									"type": "Byte[]"
-								},
-								"sink": {
-									"name": "Photo",
-									"type": "Byte[]"
-								}
-							},
-							{
-								"source": {
-									"name": "CustomFields",
-									"type": "String"
-								},
-								"sink": {
-									"name": "CustomFields",
-									"type": "String"
-								}
-							},
-							{
-								"source": {
-									"name": "LastEditedBy",
-									"type": "Int32"
-								},
-								"sink": {
-									"name": "LastEditedBy",
-									"type": "Int32"
-								}
-							}
-						]
-					}
-				},
-				"inputs": [
-					{
-						"referenceName": "OLTP_People",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "test",
-						"type": "DatasetReference"
-					}
-				]
+					"traceLevel": "Fine"
+				}
 			}
 		],
 		"annotations": []
